@@ -13,6 +13,12 @@ public class Utilisateur {
 	private String id;
 	private String password;
 	private boolean connected;
+	
+	public Utilisateur(String id, String password, boolean connected){
+		this.id=id;
+		this.password=password;
+		this.connected=connected;
+	}
 	/**
 	 * @return the id
 	 */

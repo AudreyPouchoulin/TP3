@@ -10,5 +10,10 @@
  *
  */
 public interface ServeurInterface extends java.rmi.Remote{
-		public void seeMessage() throws java.rmi.RemoteException;
+		public void seeMessage(String message) throws java.rmi.RemoteException;
+
+		/**
+		 * @param str
+		 */
+		public void connect(String str) throws java.rmi.RemoteException;
 }
