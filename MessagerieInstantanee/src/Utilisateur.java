@@ -24,11 +24,9 @@ public class Utilisateur  {
 	public void setPort_nb(int port_nb) {
 		this.port_nb = port_nb;
 	}
-	public Utilisateur(String id, String password, boolean connected,int port_nb){
+	public Utilisateur(String id, String password){
 		this.id=id;
 		this.password=password;
-		this.connected=connected;
-		this.port_nb=port_nb;
 	}
 	/**
 	 * @return the id
