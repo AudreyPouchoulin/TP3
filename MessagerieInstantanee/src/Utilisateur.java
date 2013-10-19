@@ -1,4 +1,3 @@
-import java.io.Serializable;
 
 /**
  * Project: MessagerieInstantanee
@@ -15,19 +14,12 @@ public class Utilisateur  {
 	private String id;
 	private String password;
 	private boolean connected;
-	private int port_nb;
-	
-	
-	public int getPort_nb() {
-		return port_nb;
-	}
-	public void setPort_nb(int port_nb) {
-		this.port_nb = port_nb;
-	}
+
 	public Utilisateur(String id, String password){
 		this.id=id;
 		this.password=password;
 	}
+	
 	/**
 	 * @return the id
 	 */

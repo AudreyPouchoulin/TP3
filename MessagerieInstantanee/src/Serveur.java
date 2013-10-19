@@ -26,6 +26,7 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 	private final String NOM_FICHIER = "clients.dat"; 	//Nom du fichier de sauvegarde des clients inscrits au service de chat
 	public static int port_num = 8090; 					//numero de port pour le serveur
 	private static ArrayList <Utilisateur> utilisateurs = new ArrayList<Utilisateur>();	//liste des utilisateurs
+	private static ArrayList <Utilisateur> utilisateursConnectés = new ArrayList<Utilisateur>();	//liste des utilisateurs connectés
 
 	/**
 	 * Constructeur du serveur
@@ -111,19 +112,11 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 
 
 	/* (non-Javadoc)
-	 * @see ServeurInterface#get_num_port()
-	 */
-	@Override
-	public int get_num_port() throws RemoteException {
-		return port_num++;
-	}
-
-	/* (non-Javadoc)
 	 * @see ServeurInterface#connect(java.lang.String, java.lang.String, int)
 	 */
 	@Override
-	public String connect(String id, String password, int num_port) throws RemoteException {
-		System.out.println("Demande de connexion de l'utilisateur d'identifiant " + id + " avec le mot de passe " + password + " sur le port " + num_port);
+	public String connect(String id, String password) throws RemoteException {
+		System.out.println("Demande de connexion de l'utilisateur " + id + " avec le mot de passe " + password);
 		for (int i=0;i<utilisateurs.size();i++){
 			if (utilisateurs.get(i).getId().equals(id)){
 				if (utilisateurs.get(i).getPassword().equals(password)){
@@ -132,11 +125,10 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 						return "Echec de connexion, l'utilisateur "+ id + " est déjà connecté.";
 					} else {
 						utilisateurs.get(i).setConnected(true);
-						utilisateurs.get(i).setPort_nb(num_port);
+						utilisateursConnectés.add(utilisateurs.get(i));
 						System.out.println("Connexion réussie");
 						return "Connexion réussie \n Bienvenue "+ id;
 					}
-					
 				} else {
 					System.out.println("Echec connexion");
 					return "Echec de connexion car mot de passe invalide";
@@ -152,10 +144,42 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 	 */
 	@Override
 	public String disconnect(String nom) throws RemoteException {
-		System.out.println("Invocation de la méthode disconnect(...)");
-		return "disconnect succès";
+		System.out.println("Demande de déconnexion de l'utilisateur " + nom);
+		for (int i=0;i<utilisateurs.size();i++){
+			if (utilisateurs.get(i).getId().equals(nom)){
+				if (!utilisateurs.get(i).isConnected()){
+					System.out.println("Erreur serveur, demande de déconnexion d'un utilisateur déjà déconnecté ...");
+					return "Erreur serveur, demande de déconnexion d'un utilisateur déjà déconnecté ...";
+				} else {
+					utilisateurs.get(i).setConnected(false);
+					utilisateursConnectés.remove(utilisateurs.get(i));
+					System.out.println("Déconnexion réussie");
+					return "Déconnexion réussie \n Aurevoir "+ nom;
+				}
+			}
+		}
+		System.out.println("Erreur serveur, demande de déconnexion d'un utilisateur non existant");
+		return "Erreur serveur, demande de déconnexion d'un utilisateur non existant";	
 	}
 
+	/* (non-Javadoc)
+	 * @see ServeurInterface#getListUtilisateurs(java.lang.String)
+	 */
+	@Override
+	public String getListUtilisateursConnectés(String id) throws RemoteException {
+		System.out.println("Demande de liste d'utilisateurs connectés par " + id);
+		String result = "pas d'autre utilisateur connecté";
+		if (utilisateursConnectés.size()>1){
+			result = "Liste des utilisateurs en ligne:";
+			for (int i=0; i<utilisateursConnectés.size();i++){
+				if (!utilisateursConnectés.get(i).getId().equals(id)){
+					result = result + "\n"+ utilisateursConnectés.get(i).getId();
+				}
+			}
+		}
+		return result;
+	}
+	
 	/* (non-Javadoc)
 	 * @see ServeurInterface#send(java.lang.String)
 	 */
@@ -165,65 +189,13 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 		return "Message envoyé";	
 	}
 
-	/*public void disconnect(String id) throws RemoteException {
-		int i=0;
-		//recherche ds la liste des clients connectés
-		while(i<clientsConnectés.size()&&(clientsConnectés.get(i)).getId().compareTo(id)!=0)
-			i++;
-			if(i<clients_conx.size())
-			{
-				clients_conx.remove(i);
-				if(clients_conx.size()>=1){
-					for (i = 0; i < clients_conx.size(); i++) {
-						ServeurInterface S = null;
-						try {
-							S = (ServeurInterface) Naming.lookup("//"+InetAddress.getLocalHost().getHostName()+clients_conx.get(i).getPort_num()+"/mon_serveur");
-							//S.clidisconnect(id);
-						}
-						catch (Exception e) {
-							System.out.println(e.toString());
-						}   
-					}
-				}
-				//Changement de l'état de l'utilisateur dans le serveur
-				i=0;
-				while(i<utilisateurs.size()&& utilisateurs.get(i).getId().compareTo(id)!=0)
-					i++;
-				utilisateurs.get(i).setConnected(false);
-
-		}
-	}*/
-	
-	/*public void disconnect(String id) throws RemoteException {
+	/* (non-Javadoc)
+	 * @see ServeurInterface#updateMessage()
+	 */
+	@Override
+	public String updateMessage() throws RemoteException {
 		// TODO Auto-generated method stub
-		int i=0;
-		//recherche ds la liste des clients connectés
-		while(i<clients_conx.size()&&(clients_conx.get(i)).getId().compareTo(id)!=0)
-			i++;
-
-		if(i<clients_conx.size())
-		{
-			clients_conx.remove(i);
-			if(clients_conx.size()>=1){
-				for (i = 0; i < clients_conx.size(); i++) {
-					ServeurInterface S = null;
-					try {
-						S = (ServeurInterface) Naming.lookup("//"+InetAddress.getLocalHost().getHostName()+clients_conx.get(i).getPort_num()+"/mon_serveur");
-						//S.clidisconnect(id);
-					}
-					catch (Exception e) {
-						System.out.println(e.toString());
-					}   
-				}
-			}
-			//Changement de l'état de l'utilisateur dans le serveur
-			i=0;
-			while(i<utilisateurs.size()&& utilisateurs.get(i).getId().compareTo(id)!=0)
-				i++;
-			utilisateurs.get(i).setConnected(false);
-
-		}
-	}*/
-
+		return null;
+	}
 
 }

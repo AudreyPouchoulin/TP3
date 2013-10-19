@@ -14,39 +14,20 @@ import java.util.StringTokenizer;
  *
  */
 public class Client {
-	
-	private int port_num;
+
 	private static String id;
-	
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public int getPort_num() {
-		return port_num;
-	}
-
-	public void setPort_num(int port_num) {
-		this.port_num = port_num;
-	}
-
-	public Client(String id, int port_num) {
-		// TODO Auto-generated constructor stub
-	}
 
 	public static void main(String args[]) throws RemoteException {
 		ServeurInterface serveur = null;
 		try {
 			// Récupération d'un stub sur l'objet serveur.
-			String URL = "//"+InetAddress.getLocalHost().getHostName()+":"+ 8090 +"/mon_serveur";
+			String URL = "//"+InetAddress.getLocalHost().getHostName()+":"+ Serveur.port_num +"/mon_serveur";
 			serveur = (ServeurInterface) Naming.lookup(URL);
 			System.out.println("Client connecté au serveur "+ URL +"\n");
 		} catch (Exception exc) {
 			System.out.println("Erreur dans la création du client connecté au serveur\n"+ exc.toString());
+			return;
 		}
 		System.out.println("Uttilisation de ta messagerie:\n"
 				+ "connect id password\n"
@@ -81,20 +62,21 @@ public class Client {
 				} catch (Exception exc){
 					System.out.println("Il manque des élements pour te connecter: connect (espace) identifiant (espace) password\n" +exc.toString());
 				}
-				int port = serveur.get_num_port();
-				resultServeur = serveur.connect(idUtilisateur, password, port);
+				resultServeur = serveur.connect(idUtilisateur, password);
 				System.out.println(resultServeur);
+				id = idUtilisateur;
 				
 			// demande de déconnexion
 			} else if (str.contains("bye")){
-				String id = "olfa";
-				serveur.disconnect(id);
+				resultServeur = serveur.disconnect(id);
+				System.out.println(resultServeur);
 				
 			// demande des autres utilisateurs connectés
 			} else if (str.contains("who")){
-//				serveur.getListUtilisateur();
+				resultServeur = serveur.getListUtilisateursConnectés(id);
+				System.out.println(resultServeur);
 
-			// demande d'actualisation des derniers messages envoyés
+			// demande forcée d'actualisation des derniers messages envoyés
 			} else if (str.contains("update")){
 //				serveur.getDernierMessageEnvoye();
 			}

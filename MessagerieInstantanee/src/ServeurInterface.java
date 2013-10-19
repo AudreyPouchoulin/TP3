@@ -15,18 +15,25 @@ import java.rmi.RemoteException;
 public interface ServeurInterface extends Remote {
 
 	/**
-	 *  Fonction qui sera appelé par le client pour se connecter au serveur de chat
+	 *  Fonction qui sera appelé par le client pour se connecter au chat
 	 *  ajout du client a la liste des clients connecté au serveur
 	 * @param id
 	 * @param password
-	 * @param num_port
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public String connect(String id,String password,int num_port)throws RemoteException;
-
+	public String connect(String id,String password)throws RemoteException;
+	
 	/**
-	 * Fonction qui sera appellée par le client inscrit au service de chat pour envoyer un message au serveur
+	 * Fonction permettant de déconnecter un client du service de chat
+	 * @param id
+	 * @return état de la requête (succès ou échec)
+	 * @throws RemoteException
+	 */
+	public String disconnect(String id)throws RemoteException;
+	
+	/**
+	 * Fonction qui sera appellée par un client du chat pour envoyer un message aux autres utilisateurs connectés au chat
 	 * ajouter un message a la liste des messages
 	 * @param message
 	 * @param identifiant utilisateur
@@ -36,18 +43,18 @@ public interface ServeurInterface extends Remote {
 	public String send(String message, String idUtilisateur) throws RemoteException;
 	
 	/**
-	 * Fonction permettant d'éliminer un client du service du chat
-	 * @param id
+	 * Fonction qui sera appellée par un client du chat pour savoir quels sont les autres utilisateurs connectés
+	 * @param identifiant de l'utilisateur déjà connecté
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public String disconnect(String id)throws RemoteException;
-
+	public String getListUtilisateursConnectés(String id) throws RemoteException;
+	
 	/**
-	 * Fonction qui permet de renvoyer un numero de port dispo
-	 * @return numéro de port disponible
+	 * Fonction qui sera appellée par un client du chat à intervalle régulier pour voir les derniers messages envoyés
+	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public int get_num_port() throws RemoteException;
+	public String updateMessage() throws RemoteException;
 
 }
