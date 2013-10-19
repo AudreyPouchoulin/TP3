@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Project: MessagerieInstantanee
  * Creation date: 18 oct. 2013
@@ -5,19 +7,28 @@
  */
 
 /**
- * @author Audrey
+ * @author Audrey, Olfa
  *
  */
-public class Utilisateur {
+public class Utilisateur  {
 
 	private String id;
 	private String password;
 	private boolean connected;
+	private int port_nb;
 	
-	public Utilisateur(String id, String password, boolean connected){
+	
+	public int getPort_nb() {
+		return port_nb;
+	}
+	public void setPort_nb(int port_nb) {
+		this.port_nb = port_nb;
+	}
+	public Utilisateur(String id, String password, boolean connected,int port_nb){
 		this.id=id;
 		this.password=password;
 		this.connected=connected;
+		this.port_nb=port_nb;
 	}
 	/**
 	 * @return the id

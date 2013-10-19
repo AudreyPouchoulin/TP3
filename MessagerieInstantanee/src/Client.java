@@ -11,7 +11,31 @@ import java.util.Scanner;
  * @author Audrey
  *
  */
-public class Client implements ServeurInterface{
+public class Client {
+	
+	int port_num;
+	String id;
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getPort_num() {
+		return port_num;
+	}
+
+	public void setPort_num(int port_num) {
+		this.port_num = port_num;
+	}
+
+	public Client(String id, int port_num) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public static void main(String args[]) {
 		try {
 			// Récupération d'un stub sur l'objet serveur.
@@ -62,9 +86,5 @@ public class Client implements ServeurInterface{
 	/* (non-Javadoc)
 	 * @see ServeurInterface#connect(java.lang.String)
 	 */
-	@Override
-	public void connect(String str) throws RemoteException {
-		System.out.println(str);
-		
-	}
+	
 }
