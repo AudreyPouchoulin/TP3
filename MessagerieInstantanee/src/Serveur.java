@@ -22,12 +22,15 @@ import java.util.ArrayList;
  */
 
 public class Serveur extends UnicastRemoteObject implements ServeurInterface{
+	
 	private static final long serialVersionUID = 1L;
-	private final String NOM_FICHIER = "clients.dat"; 	//Nom du fichier de sauvegarde des clients inscrits au service de chat
+	//private final String NOM_FICHIER = "clients.dat"; 	//Nom du fichier de sauvegarde des clients inscrits au service de chat
 	public static int port_num = 8090; 					//numero de port pour le serveur
 	private static ArrayList <Utilisateur> utilisateurs = new ArrayList<Utilisateur>();	//liste des utilisateurs
 	private static ArrayList <Utilisateur> utilisateursConnectés = new ArrayList<Utilisateur>();	//liste des utilisateurs connectés
 
+	private static ArrayList<Message>messages=new ArrayList<Message>();
+	
 	/**
 	 * Constructeur du serveur
 	 * @throws RemoteException
@@ -70,73 +73,34 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 		utilisateurs.add(utilisateur3);
 	}
 
-	/**
-	 * Chargement des clients à partir du fichier
-	 */
-	public void readData(){
-		ObjectInputStream fe = null;
-		boolean trouve=true;
-		boolean pasEncore=true;
-		try {
-			fe = new ObjectInputStream(new FileInputStream(NOM_FICHIER));
-		}
-		catch(FileNotFoundException fnf){
-			System.out.println(fnf.toString());
-			trouve = false;
-		}
-		catch (IOException eof) {
-			System.out.println(eof.toString());
-		}
-		//si le fichier existe
-		if(trouve){
-			while (pasEncore) {
-				try {
-					Utilisateur u = (Utilisateur) fe.readObject();
-					utilisateurs.add(u);  
-				}
-				catch (EOFException e) {
-					pasEncore = false;
-					System.out.println("lecture des contacts terminée");
-				}
-				catch (ClassNotFoundException ex2) {}
-				catch (IOException ex2) {}
-			}
-			try {
-				fe.close();
-			}
-			catch (IOException ex) {
-				System.out.println(ex.toString());
-			}
-		}
-	}
-
-
+	
 	/* (non-Javadoc)
 	 * @see ServeurInterface#connect(java.lang.String, java.lang.String, int)
 	 */
 	@Override
 	public String connect(String id, String password) throws RemoteException {
-		System.out.println("Demande de connexion de l'utilisateur " + id + " avec le mot de passe " + password);
-		for (int i=0;i<utilisateurs.size();i++){
-			if (utilisateurs.get(i).getId().equals(id)){
-				if (utilisateurs.get(i).getPassword().equals(password)){
-					if (utilisateurs.get(i).isConnected()){
-						System.out.println("Echec connexion");
-						return "Echec de connexion, l'utilisateur "+ id + " est déjà connecté.";
-					} else {
-						utilisateurs.get(i).setConnected(true);
-						utilisateursConnectés.add(utilisateurs.get(i));
-						System.out.println("Connexion réussie");
-						return "Connexion réussie \n Bienvenue "+ id;
-					}
-				} else {
-					System.out.println("Echec connexion");
-					return "Echec de connexion car mot de passe invalide";
-				}
-			}
-		}
-		System.out.println("Echec connexion");
-		return "Echec de connexion, possiblité d'échec: erreur dans l'identifiant ou identifiant non existant";	
+		
+		 System.out.println("Demande de connexion de l'utilisateur " + id + " avec le mot de passe " + password);
+         for (int i=0;i<utilisateurs.size();i++){
+                 if (utilisateurs.get(i).getId().equals(id)){
+                         if (utilisateurs.get(i).getPassword().equals(password)){
+                                 if (utilisateurs.get(i).isConnected()){
+                                         System.out.println("Echec connexion");
+                                         return "Echec de connexion, l'utilisateur "+ id + " est déjà connecté.";
+                                 } else {
+                                         utilisateurs.get(i).setConnected(true);
+                                         utilisateursConnectés.add(utilisateurs.get(i));
+                                         System.out.println("Connexion réussie");
+                                         return "Connexion réussie \n Bienvenue "+ id;
+                                 }
+                         } else {
+                                 System.out.println("Echec connexion");
+                                 return "Echec de connexion car mot de passe invalide";
+                         }
+                 }
+         }
+         System.out.println("Echec connexion");
+         return "Echec de connexion, possiblité d'échec: erreur dans l'identifiant ou identifiant non existant"; 
 	}
 
 	/* (non-Javadoc)
@@ -148,8 +112,8 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 		for (int i=0;i<utilisateurs.size();i++){
 			if (utilisateurs.get(i).getId().equals(nom)){
 				if (!utilisateurs.get(i).isConnected()){
-					System.out.println("Erreur serveur, demande de déconnexion d'un utilisateur déjà déconnecté ...");
-					return "Erreur serveur, demande de déconnexion d'un utilisateur déjà déconnecté ...";
+					System.out.println("Erreur serveur, demande de deconnexion d\'un utilisateur deja deconnecte ...");
+					return "Erreur serveur, demande de daconnexion d'un utilisateur deja deconnecte ...";
 				} else {
 					utilisateurs.get(i).setConnected(false);
 					utilisateursConnectés.remove(utilisateurs.get(i));
@@ -185,17 +149,63 @@ public class Serveur extends UnicastRemoteObject implements ServeurInterface{
 	 */
 	@Override
 	public String send(String message, String id) throws RemoteException {
-		System.out.println("Demande d'envoi de message par l'utilisateur" + id);
-		return "Message envoyé";	
+		
+		
+		//recherche de l'utilisateur dans la liste 
+		int i=0;
+		boolean find=false;
+		while (i<utilisateursConnectés.size()&&!find){
+			find =utilisateursConnectés.get(i).getId().equals(id);
+			i++;
+		}
+		i--;
+		if(find){
+		System.out.println("Demande d\'envoi de message par l\'utilisateur " + id);
+		Message m=new Message(id,message);
+		messages.add(m);
+		return "Message envoye";	
+		}
+		else{
+			System.out.println("utilisateur non connecte");
+			return "Veuillez vous connecter";
+		}
+		
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see ServeurInterface#updateMessage()
 	 */
 	@Override
-	public String updateMessage() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String updateMessage(String id) throws RemoteException {
+		
+		//tester si l'utilsateur est connecté 
+		int i=0;
+		boolean find=false;
+		while (i<utilisateursConnectés.size()&&!find){
+			find =utilisateursConnectés.get(i).getId().equals(id);
+			i++;
+			}
+		i--;
+		
+		if(find){
+			if (messages.size()==0){
+				System.out.println("Aucun message enregistre ");
+				return "Aucun message enregistre";
+				}
+					
+			else {
+						String disc="";
+						for(i=0;i<messages.size();i++)
+							disc=disc+messages.get(i).toString();
+						return disc;
+					}
+		}
+		else{
+			System.out.println("utilisateur non connecte");
+			return "Veuillez vous connecter";
+		}
+		
 	}
 
 }

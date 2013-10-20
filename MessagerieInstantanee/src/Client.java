@@ -29,14 +29,17 @@ public class Client {
 			System.out.println("Erreur dans la création du client connecté au serveur\n"+ exc.toString());
 			return;
 		}
-		System.out.println("Uttilisation de ta messagerie:\n"
-				+ "connect id password\n"
-				+ "send message\n"
-				+ "bye (déconnexion)\n"
-				+ "who (voir utilisateurs connectés)\n"
-				+ "update (voir derniers messages envoyés)\n\n"
-				+ "Commence à utiliser ta messagerie:");
 		
+		System.out.println("*****************************************************************\n"
+					   	+  "*\t\t Uttilisation de ta messagerie \t\t\t*\n"	
+					   	+  "*****************************************************************\n"
+					   	+  "*\t\t connect id password\t\t\t\t*\n"
+					   	+  "*\t\t send message\t\t\t\t\t*\n"
+					   	+  "*\t\t bye (deconnexion)\t\t\t\t*\n"
+					   	+  "*\t\t who (voir utilisateurs connectes)\t\t*\n"
+					   	+  "*\t\t update (voir derniers messages envoyes)\t*\n"
+					   	+  "*****************************************************************\n"
+					   	+  "*\t\t Commence à utiliser ta messagerie:");
 		// Appel d'une méthode sur l'objet distant
 		Scanner sc = new Scanner(System.in);
 		String str = "init";
@@ -46,8 +49,8 @@ public class Client {
 			
 			// demande d'envoi d'un message
 			if (str.contains("send")){
-				str.replace("send ", "");
-				resultServeur = serveur.send(str, id);
+				String msg=str.replace("send ", "");
+				resultServeur = serveur.send(msg, id);
 				System.out.println(resultServeur);
 				
 			// demande de connexion à un compte utilisateur
@@ -78,7 +81,8 @@ public class Client {
 
 			// demande forcée d'actualisation des derniers messages envoyés
 			} else if (str.contains("update")){
-//				serveur.getDernierMessageEnvoye();
+				resultServeur = serveur.updateMessage(id);
+				System.out.println(resultServeur);
 			}
 			
 			sc = new Scanner(System.in);

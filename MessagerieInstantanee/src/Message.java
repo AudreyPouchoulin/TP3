@@ -10,10 +10,20 @@
  *
  */
 public class Message {
+
 	private int id;
 	private String idClient;
 	private String date;
 	private String message;
+	
+	Message(String idClient , String message){
+		
+		this.idClient=idClient;
+		this.message=message;
+	}
+	
+	
+	
 	/**
 	 * @return the id
 	 */
@@ -61,6 +71,13 @@ public class Message {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	/**
+	 * affichage du message envoyé
+	 */
+	public String toString(){
+		return idClient+">>"+message+"\n";
 	}
 	
 }

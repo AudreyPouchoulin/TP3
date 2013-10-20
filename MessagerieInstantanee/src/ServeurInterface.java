@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
  *
  */
 public interface ServeurInterface extends Remote {
+	
 
 	/**
 	 *  Fonction qui sera appelé par le client pour se connecter au chat
@@ -48,6 +49,7 @@ public interface ServeurInterface extends Remote {
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
+	//who
 	public String getListUtilisateursConnectés(String id) throws RemoteException;
 	
 	/**
@@ -55,6 +57,6 @@ public interface ServeurInterface extends Remote {
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public String updateMessage() throws RemoteException;
+	public String updateMessage(String idUtilisateur) throws RemoteException;
 
 }
