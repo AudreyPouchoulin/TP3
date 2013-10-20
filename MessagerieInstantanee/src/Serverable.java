@@ -1,5 +1,6 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Date;
 
 /**
  * Project: MessagerieInstantanée
@@ -12,7 +13,7 @@ import java.rmi.RemoteException;
  * @author Audrey,Olfa
  *
  */
-public interface ServeurInterface extends Remote {
+public interface Serverable extends Remote {
 	
 
 	/**
@@ -41,7 +42,7 @@ public interface ServeurInterface extends Remote {
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public String send(String message, String idUtilisateur) throws RemoteException;
+	public String send(String message, String idUtilisateur, Date date) throws RemoteException;
 	
 	/**
 	 * Fonction qui sera appellée par un client du chat pour savoir quels sont les autres utilisateurs connectés
@@ -57,6 +58,6 @@ public interface ServeurInterface extends Remote {
 	 * @return état de la requête (succès ou échec)
 	 * @throws RemoteException
 	 */
-	public String updateMessage(String idUtilisateur) throws RemoteException;
+	public String updateMessage(String idUtilisateur, Date dateLastReception) throws RemoteException;
 
 }

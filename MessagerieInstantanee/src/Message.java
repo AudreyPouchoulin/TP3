@@ -1,3 +1,5 @@
+import java.util.Date;
+
 
 /**
  * Project: MessagerieInstantanee
@@ -11,18 +13,24 @@
  */
 public class Message {
 
-	private int id;
+	private int id = 0;
 	private String idClient;
-	private String date;
+	private Date date;
 	private String message;
 	
-	Message(String idClient , String message){
-		
-		this.idClient=idClient;
-		this.message=message;
+	Message(int id, String idClient , String message, Date date){;
+		this.id=id;
+		this.idClient = idClient;
+		this.message = message;
+		this.date = date;
 	}
 	
-	
+	/**
+	 * affichage du message envoyé
+	 */
+	public String toString(){
+		return "mess" + id + " " + idClient + " : " + date + ">>" + message;
+	}
 	
 	/**
 	 * @return the id
@@ -51,13 +59,13 @@ public class Message {
 	/**
 	 * @return the date
 	 */
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	/**
@@ -73,11 +81,5 @@ public class Message {
 		this.message = message;
 	}
 	
-	/**
-	 * affichage du message envoyé
-	 */
-	public String toString(){
-		return idClient+">>"+message+"\n";
-	}
 	
 }

@@ -1,5 +1,3 @@
-/Client.class
-/Message.class
-/Serveur.class
-/ServeurInterface.class
-/Utilisateur.class
+/Serverable.class
+/Updater.class
+/Updater$UpdateTask.class
