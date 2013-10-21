@@ -153,7 +153,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	 * @see ServeurInterface#send(java.lang.String)
 	 */
 	@Override
-	synchronized public String send(String message, String id, Date date) throws RemoteException {
+	public String send(String message, String id, Date date) throws RemoteException {
 		System.out.println("Demande d'envoi de message par " + id);
 		boolean utilisateurConnecte = utilisateurIsConnected(id);
 		if(utilisateurConnecte){
@@ -173,7 +173,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	 * @see ServeurInterface#updateMessage()
 	 */
 	@Override
-	synchronized public String updateMessage(String id, Date dateLastReception) throws RemoteException {
+	public String updateMessage(String id, Date dateLastReception) throws RemoteException {
 		System.out.println("Demande d'actualisation des messages envoyes par " + id);
 		boolean utilisateurConnecte = utilisateurIsConnected(id);
 		if(utilisateurConnecte){
@@ -183,11 +183,11 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 			} else {
 				boolean hasNewMessage = false;
 				String result = "";
-				result = "Nouveaux messages : \n";
+				result = "Nouveaux messages :";
 				for(int i=0; i<messages.size(); i++){
 					if (messages.get(i).getDate().after(dateLastReception)){
 						hasNewMessage = true;
-						result = result + messages.get(i).toString()+"\n";
+						result = result + "\n" + messages.get(i).toString();
 					}
 				}
 				if (!hasNewMessage){
