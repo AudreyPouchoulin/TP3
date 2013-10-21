@@ -21,16 +21,14 @@ public class Updater{
 		this.serveur = serveur;
 		this.timer = new Timer();
 		long t = Client.dateLastReception.getTime();
-		Date dateFirstTime = new Date(t + (minutes*60*10000));
+		Date dateFirstTime = new Date(t + (minutes*60*1000));
 		this.timer.scheduleAtFixedRate(new UpdateTask (), dateFirstTime, minutes*1000*60);
-		System.out.println("schedule");
-		System.out.println(dateFirstTime);
+
 	}
 	
 	class UpdateTask extends TimerTask {
 		public void run () {
 			String resultServeur ="";
-			System.out.println("action");
 			try {
 				resultServeur = serveur.updateMessage(Client.id, Client.dateLastReception);
 			} catch (RemoteException e) {

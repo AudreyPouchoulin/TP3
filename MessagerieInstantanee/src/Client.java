@@ -24,9 +24,9 @@ public class Client {
 		try {
 			String URL = "//"+InetAddress.getLocalHost().getHostName()+":"+ Serveur.port_num +"/mon_serveur";
 			serveur = (Serverable) Naming.lookup(URL);
-			System.out.println("Client connect� au serveur "+ URL +"\n");
+			System.out.println("Client connecte au serveur "+ URL +"\n");
 		} catch (Exception exc) {
-			System.out.println("Erreur dans la cr�ation du client connect� au serveur\n"+ exc.toString());
+			System.out.println("Erreur dans la creation du client connecte au serveur\n"+ exc.toString());
 			return;
 		}
 		
@@ -48,14 +48,14 @@ public class Client {
 		while (!str.equals("quit")){
 			str = sc.nextLine();
 			
-			// demande d'envoi d'un message (Appel d'une m�thode sur l'objet distant)
+			// demande d'envoi d'un message (Appel d'une methode sur l'objet distant)
 			if (str.contains("send")){
 				Date date = new Date();
 				String msg=str.replace("send ", "");
 				resultServeur = serveur.send(msg, id, date);
 				System.out.println(resultServeur);
 				
-			// demande de connexion � un compte utilisateur (Appel d'une m�thode sur l'objet distant)
+			// demande de connexion a un compte utilisateur (Appel d'une methode sur l'objet distant)
 			} else if (str.contains("connect")){
 				StringTokenizer token = new StringTokenizer(str, " ");
 				String idUtilisateur = null;
@@ -65,26 +65,40 @@ public class Client {
 					idUtilisateur = token.nextToken();
 					password = token.nextToken();
 				} catch (Exception exc){
-					System.out.println("Il manque des �lements pour te connecter: connect (espace) identifiant (espace) password\n" +exc.toString());
+					System.out.println("Il manque des elements pour te connecter: connect (espace) identifiant (espace) password\n" +exc.toString());
 				}
-				resultServeur = serveur.connect(idUtilisateur, password);
-				System.out.println(resultServeur);
-				id = idUtilisateur;
-				dateLastReception = new Date();
-				updaterAutomatic = new Updater(1, serveur);
+				int connexionResult = serveur.connect(idUtilisateur, password);
+				if (connexionResult == -3){
+					System.out.println("Echec de connexion, l'utilisateur "+ id + " est deja connecte.");
+				} else if (connexionResult == -2){
+					System.out.println("Echec de connexion car mot de passe invalide");
+				} else if (connexionResult == -1){
+					System.out.println("Echec de connexion, possiblit� d'echec: erreur dans l'identifiant ou identifiant non existant");
+				} else if (connexionResult == 1){
+					id = idUtilisateur;
+					dateLastReception = new Date();
+					updaterAutomatic = new Updater(1, serveur);
+					System.out.println("Bienvenue "+ id);	
+				}
 				
-			// demande de d�connexion (Appel d'une m�thode sur l'objet distant)
+			// demande de deconnexion (Appel d'une methode sur l'objet distant)
 			} else if (str.contains("bye")){
-				resultServeur = serveur.disconnect(id);
-				System.out.println(resultServeur);
-				updaterAutomatic.stop();
+				int deconnexionResult = serveur.disconnect(id);
+				if (deconnexionResult == 1){
+					System.out.println("Aurevoir "+ id);
+					updaterAutomatic.stop();
+				} else if (deconnexionResult == -1){
+					System.out.println("Erreur serveur, demande de daconnexion d'un utilisateur deja deconnecte ...");
+				} else if (deconnexionResult == -2){
+					System.out.println("Erreur serveur, demande de d�connexion d'un utilisateur non existant");
+				}
 				
-			// demande des autres utilisateurs connect�s (Appel d'une m�thode sur l'objet distant)
+			// demande des autres utilisateurs connectes (Appel d'une methode sur l'objet distant)
 			} else if (str.contains("who")){
 				resultServeur = serveur.getListUtilisateursConnectes(id);
 				System.out.println(resultServeur);
 
-			// demande forc�e d'actualisation des derniers messages envoy�s (Appel d'une m�thode sur l'objet distant)
+			// demande forc�e d'actualisation des derniers messages envoyes (Appel d'une methode sur l'objet distant)
 			} else if (str.contains("update")){
 				resultServeur = serveur.updateMessage(id, dateLastReception);
 				System.out.println(resultServeur);

@@ -21,18 +21,18 @@ public interface Serverable extends Remote {
 	 *  ajout du client a la liste des clients connect� au serveur
 	 * @param id
 	 * @param password
-	 * @return �tat de la requ�te (succ�s ou �chec)
+	 * @return  etat de la requete (succes = 1 ou echec = -1 erreur identifiant, -2 erreur mot de passe, -3 erreur déja connecte)
 	 * @throws RemoteException
 	 */
-	public String connect(String id,String password)throws RemoteException;
+	public int connect(String id,String password)throws RemoteException;
 	
 	/**
 	 * Fonction permettant de d�connecter un client du service de chat
 	 * @param id
-	 * @return �tat de la requ�te (succ�s ou �chec)
+	 * @return etat de la requete (succes = 1 ou echec = -1 déja déconnecte, -2 erreur serveur)
 	 * @throws RemoteException
 	 */
-	public String disconnect(String id)throws RemoteException;
+	public int disconnect(String id)throws RemoteException;
 	
 	/**
 	 * Fonction qui sera appell�e par un client du chat pour envoyer un message aux autres utilisateurs connect�s au chat
