@@ -3,7 +3,7 @@ import java.rmi.RemoteException;
 import java.util.Date;
 
 /**
- * Project: MessagerieInstantanée
+ * Project: MessagerieInstantanï¿½e
  * Creation date: 18 oct. 2013
  * Author: Audrey
  */
@@ -17,45 +17,45 @@ public interface Serverable extends Remote {
 	
 
 	/**
-	 *  Fonction qui sera appelé par le client pour se connecter au chat
-	 *  ajout du client a la liste des clients connecté au serveur
+	 *  Fonction qui sera appelï¿½ par le client pour se connecter au chat
+	 *  ajout du client a la liste des clients connectï¿½ au serveur
 	 * @param id
 	 * @param password
-	 * @return état de la requête (succès ou échec)
+	 * @return ï¿½tat de la requï¿½te (succï¿½s ou ï¿½chec)
 	 * @throws RemoteException
 	 */
 	public String connect(String id,String password)throws RemoteException;
 	
 	/**
-	 * Fonction permettant de déconnecter un client du service de chat
+	 * Fonction permettant de dï¿½connecter un client du service de chat
 	 * @param id
-	 * @return état de la requête (succès ou échec)
+	 * @return ï¿½tat de la requï¿½te (succï¿½s ou ï¿½chec)
 	 * @throws RemoteException
 	 */
 	public String disconnect(String id)throws RemoteException;
 	
 	/**
-	 * Fonction qui sera appellée par un client du chat pour envoyer un message aux autres utilisateurs connectés au chat
+	 * Fonction qui sera appellï¿½e par un client du chat pour envoyer un message aux autres utilisateurs connectï¿½s au chat
 	 * ajouter un message a la liste des messages
 	 * @param message
 	 * @param identifiant utilisateur
-	 * @return état de la requête (succès ou échec)
+	 * @return ï¿½tat de la requï¿½te (succï¿½s ou ï¿½chec)
 	 * @throws RemoteException
 	 */
 	public String send(String message, String idUtilisateur, Date date) throws RemoteException;
 	
 	/**
-	 * Fonction qui sera appellée par un client du chat pour savoir quels sont les autres utilisateurs connectés
-	 * @param identifiant de l'utilisateur déjà connecté
-	 * @return état de la requête (succès ou échec)
+	 * Fonction qui sera appellï¿½e par un client du chat pour savoir quels sont les autres utilisateurs connectï¿½s
+	 * @param identifiant de l'utilisateur dï¿½jï¿½ connectï¿½
+	 * @return ï¿½tat de la requï¿½te (succï¿½s ou ï¿½chec)
 	 * @throws RemoteException
 	 */
 	//who
-	public String getListUtilisateursConnectés(String id) throws RemoteException;
+	public String getListUtilisateursConnectes(String id) throws RemoteException;
 	
 	/**
-	 * Fonction qui sera appellée par un client du chat à intervalle régulier pour voir les derniers messages envoyés
-	 * @return état de la requête (succès ou échec)
+	 * Fonction qui sera appellï¿½e par un client du chat ï¿½ intervalle rï¿½gulier pour voir les derniers messages envoyï¿½s
+	 * @return ï¿½tat de la requï¿½te (succï¿½s ou ï¿½chec)
 	 * @throws RemoteException
 	 */
 	public String updateMessage(String idUtilisateur, Date dateLastReception) throws RemoteException;

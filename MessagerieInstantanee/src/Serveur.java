@@ -1,5 +1,5 @@
 /**
- * Project: MessagerieInstantanée
+ * Project: MessagerieInstantanï¿½e
  * Creation date: 18 oct. 2013
  * Author: Audrey
  */
@@ -22,7 +22,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	private static final long serialVersionUID = 1L;
 	public static int port_num = 8090; 					//numero de port pour le serveur
 	private static ArrayList <Utilisateur> utilisateurs = new ArrayList<Utilisateur>();	//liste des utilisateurs
-	private static ArrayList <Utilisateur> utilisateursConnectés = new ArrayList<Utilisateur>();	//liste des utilisateurs connectés
+	private static ArrayList <Utilisateur> utilisateursConnectes = new ArrayList<Utilisateur>();	//liste des utilisateurs connectï¿½s
 	private static ArrayList<Message> messages = new ArrayList<Message>();
 	private static int nbrMessages = 0;
 	
@@ -35,7 +35,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	}
 	
 	/**
-	 * Main qui démarre le serveur, charge la liste d'utilisateurs du chat
+	 * Main qui dï¿½marre le serveur, charge la liste d'utilisateurs du chat
 	 * @param args
 	 */
 	public static void main(String args[]) {
@@ -49,9 +49,9 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	public static void _start(){
 		String URL;		
 		try {	
-			LocateRegistry.createRegistry(port_num);  // Création du serveur de nom - rmiregistry
-			Serveur obj = new Serveur();							// Création d’une instance de l’objet serveur
-			URL = "//"+InetAddress.getLocalHost().getHostName()+":"+ port_num+"/mon_serveur";  // Calcul de l’URL du serveur
+			LocateRegistry.createRegistry(port_num);  // Crï¿½ation du serveur de nom - rmiregistry
+			Serveur obj = new Serveur();							// Crï¿½ation dï¿½une instance de lï¿½objet serveur
+			URL = "//"+InetAddress.getLocalHost().getHostName()+":"+ port_num+"/mon_serveur";  // Calcul de lï¿½URL du serveur
 			Naming.rebind(URL, obj);
 			System.out.println("Serveur en route: " + URL);
 		} catch (Exception exc) {
@@ -84,11 +84,11 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
                          if (utilisateurs.get(i).getPassword().equals(password)){
                                  if (utilisateurs.get(i).isConnected()){
                                          System.out.println("Echec connexion");
-                                         return "Echec de connexion, l'utilisateur "+ id + " est déjà connecté.";
+                                         return "Echec de connexion, l'utilisateur "+ id + " est dï¿½jï¿½ connectï¿½.";
                                  } else {
                                          utilisateurs.get(i).setConnected(true);
-                                         utilisateursConnectés.add(utilisateurs.get(i));
-                                         System.out.println("Connexion réussie");
+                                         utilisateursConnectes.add(utilisateurs.get(i));
+                                         System.out.println("Connexion rï¿½ussie");
                                          return "Bienvenue "+ id;
                                  }
                          } else {
@@ -98,7 +98,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
                  }
          }
          System.out.println("Echec connexion");
-         return "Echec de connexion, possiblité d'échec: erreur dans l'identifiant ou identifiant non existant"; 
+         return "Echec de connexion, possiblitï¿½ d'ï¿½chec: erreur dans l'identifiant ou identifiant non existant"; 
 	}
 
 	/* (non-Javadoc)
@@ -106,7 +106,7 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	 */
 	@Override
 	public String disconnect(String nom) throws RemoteException {
-		System.out.println("Demande de déconnexion de l'utilisateur " + nom);
+		System.out.println("Demande de dï¿½connexion de l'utilisateur " + nom);
 		for (int i=0;i<utilisateurs.size();i++){
 			if (utilisateurs.get(i).getId().equals(nom)){
 				if (!utilisateurs.get(i).isConnected()){
@@ -114,36 +114,36 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 					return "Erreur serveur, demande de daconnexion d'un utilisateur deja deconnecte ...";
 				} else {
 					utilisateurs.get(i).setConnected(false);
-					utilisateursConnectés.remove(utilisateurs.get(i));
-					System.out.println("Déconnexion réussie");
+					utilisateursConnectes.remove(utilisateurs.get(i));
+					System.out.println("Deconnexion reussie");
 					return "Aurevoir "+ nom;
 				}
 			}
 		}
-		System.out.println("Erreur serveur, demande de déconnexion d'un utilisateur non existant");
-		return "Erreur serveur, demande de déconnexion d'un utilisateur non existant";	
+		System.out.println("Erreur serveur, demande de dï¿½connexion d'un utilisateur non existant");
+		return "Erreur serveur, demande de dï¿½connexion d'un utilisateur non existant";	
 	}
 
 	/* (non-Javadoc)
 	 * @see ServeurInterface#getListUtilisateurs(java.lang.String)
 	 */
 	@Override
-	public String getListUtilisateursConnectés(String id) throws RemoteException {
-		System.out.println("Demande de liste d'utilisateurs connectés par " + id);
+	public String getListUtilisateursConnectes(String id) throws RemoteException {
+		System.out.println("Demande de liste d'utilisateurs connectï¿½s par " + id);
 		boolean utilisateurConnecte = utilisateurIsConnected(id);
-		String result = "pas d'autre utilisateur connecté";
+		String result = "pas d'autre utilisateur connectï¿½";
 		if(utilisateurConnecte){
-			System.out.println("Demande acceptée");
-			if (utilisateursConnectés.size()>1){
+			System.out.println("Demande acceptï¿½e");
+			if (utilisateursConnectes.size()>1){
 				result = "Liste des utilisateurs en ligne:";
-				for (int i=0; i<utilisateursConnectés.size();i++){
-					if (!utilisateursConnectés.get(i).getId().equals(id)){
-						result = result + "\n"+ utilisateursConnectés.get(i).getId();
+				for (int i=0; i<utilisateursConnectes.size();i++){
+					if (!utilisateursConnectes.get(i).getId().equals(id)){
+						result = result + "\n"+ utilisateursConnectes.get(i).getId();
 					}
 				}
 			}
 		} else {
-			System.out.println("Demande refusée, utilisateur non connecté");
+			System.out.println("Demande refusï¿½e, utilisateur non connectï¿½");
 			result = "Veuillez vous connecter";
 		}
 		return result;
@@ -159,11 +159,11 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 		if(utilisateurConnecte){
 			Message m=new Message(nbrMessages++, id,message, date);
 			messages.add(m);
-			System.out.println("Message envoyé");
-			return "Message envoyé";
+			System.out.println("Message envoyï¿½");
+			return "Message envoyï¿½";
 		} 
 		else {
-			System.out.println("Envoi de message refusé, utilisateur non connecté");
+			System.out.println("Envoi de message refusï¿½, utilisateur non connectï¿½");
 			return "Veuillez vous connecter";
 		}
 	}
@@ -174,11 +174,11 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 	 */
 	@Override
 	public String updateMessage(String id, Date dateLastReception) throws RemoteException {
-		System.out.println("Demande d'actualisation des messages envoyés par " + id);
+		System.out.println("Demande d'actualisation des messages envoyes par " + id);
 		boolean utilisateurConnecte = utilisateurIsConnected(id);
 		if(utilisateurConnecte){
 			if (messages.size()==0){
-				System.out.println("Actualisation des derniers messages réalisée");
+				System.out.println("Actualisation des derniers messages realisee");
 				return "Aucun nouveau message";
 			} else {
 				boolean hasNewMessage = false;
@@ -193,26 +193,26 @@ public class Serveur extends UnicastRemoteObject implements Serverable{
 				if (!hasNewMessage){
 					result = "Aucun nouveau message";
 				}
-				System.out.println("Actualisation des derniers messages réalisée");
+				System.out.println("Actualisation des derniers messages rï¿½alisï¿½e");
 				return result;
 			}
 		}
 		else{
-			System.out.println("Actualisation des messages refusée, utilisateur non connecté");
+			System.out.println("Actualisation des messages refusï¿½e, utilisateur non connectï¿½");
 			return "Veuillez vous connecter";
 		}
 	}
 	
 	/**
-	 * Test si un utilisateur est connecté (utile avant d'uatoriser l'envoie d'un message, la demande des autres personnes connectées, ...)
+	 * Test si un utilisateur est connectï¿½ (utile avant d'uatoriser l'envoie d'un message, la demande des autres personnes connectï¿½es, ...)
 	 * @param id
 	 * @return true if connected, false if not connecte
 	 */
 	private boolean  utilisateurIsConnected(String id){
 		int i=0;
 		boolean find=false;
-		while (i<utilisateursConnectés.size()&&!find){
-			find =utilisateursConnectés.get(i).getId().equals(id);
+		while (i<utilisateursConnectes.size()&&!find){
+			find =utilisateursConnectes.get(i).getId().equals(id);
 			i++;
 		}
 		return find;
