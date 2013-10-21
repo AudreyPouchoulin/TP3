@@ -4,6 +4,9 @@
  * Author: Audrey
  */
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -14,10 +17,13 @@ import java.util.StringTokenizer;
  * @author Audrey
  *
  */
-public class Client {
+public class Client{
 
+	private static final long serialVersionUID = 1L;
 	public static String id = null;
 	public static Date dateLastReception = null;
+	public static boolean isWriting = false;
+	public static Updater updaterAutomatic = null;
 
 	public static void main(String args[]) throws RemoteException {
 		Serverable serveur = null;
@@ -39,15 +45,17 @@ public class Client {
 					   	+  "*\t\t who (voir utilisateurs connectes)\t\t*\n"
 					   	+  "*\t\t update (voir derniers messages envoyes)\t*\n"
 					   	+  "*****************************************************************\n"
-					   	+  "*\t\t Commence � utiliser ta messagerie:");
+					   	+  "*\t\t Commence a utiliser ta messagerie:");
 		
 		Scanner sc = new Scanner(System.in);
 		String str = "init";
 		String resultServeur = "";
-		Updater updaterAutomatic = null;
+		MyKeyListener keyListener = new MyKeyListener();
+//		sc.addKeyListener(keyListener);
+		
 		while (!str.equals("quit")){
 			str = sc.nextLine();
-			
+
 			// demande d'envoi d'un message (Appel d'une methode sur l'objet distant)
 			if (str.contains("send")){
 				Date date = new Date();
