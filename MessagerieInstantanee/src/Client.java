@@ -16,7 +16,8 @@ import java.util.StringTokenizer;
  */
 public class Client {
 
-	private static String id;
+	public static String id = null;
+	public static Date dateLastReception = null;
 
 	public static void main(String args[]) throws RemoteException {
 		Serverable serveur = null;
@@ -42,10 +43,10 @@ public class Client {
 		
 		Scanner sc = new Scanner(System.in);
 		String str = "init";
-		String resultServeur = null;
+		String resultServeur = "";
+		Updater updaterAutomatic = null;
 		while (!str.equals("quit")){
 			str = sc.nextLine();
-			Date dateLastReception = new Date();
 			
 			// demande d'envoi d'un message (Appel d'une m�thode sur l'objet distant)
 			if (str.contains("send")){
@@ -70,11 +71,13 @@ public class Client {
 				System.out.println(resultServeur);
 				id = idUtilisateur;
 				dateLastReception = new Date();
+				updaterAutomatic = new Updater(1, serveur);
 				
 			// demande de d�connexion (Appel d'une m�thode sur l'objet distant)
 			} else if (str.contains("bye")){
 				resultServeur = serveur.disconnect(id);
 				System.out.println(resultServeur);
+				updaterAutomatic.stop();
 				
 			// demande des autres utilisateurs connect�s (Appel d'une m�thode sur l'objet distant)
 			} else if (str.contains("who")){
